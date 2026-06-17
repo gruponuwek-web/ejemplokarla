@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Ventas Diarias - Grupo Nuwek</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Syne:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <div class="logo">📊 Nuwek Ventas</div>
+            <nav class="nav">
+                <div class="nav-link active" data-view="dashboard">Dashboard</div>
+                <div class="nav-link" data-view="entrada">Entrada Hoy</div>
+                <div class="nav-link" data-view="historico">Editar Histórico</div>
+                <div class="nav-link" data-view="config">Configuración</div>
+            </nav>
+        </div>
+        <div class="header-right">
+            <select id="userSelector" class="user-selector"></select>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Dashboard View -->
+        <div id="dashboard" class="view active">
+            <div class="dashboard-filters">
+                <div class="filter-group">
+                    <label class="filter-label">Sucursal</label>
+                    <select id="filterSucursal" class="filter-select"></select>
+                </div>
+                <div class="filter-group">
+                    <label class="filter-label">Vendedor</label>
+                    <select id="filterVendedor" class="filter-select"></select>
+                </div>
+            </div>
+            <div id="dashboardContent"></div>
+        </div>
+
+        <!-- Entrada Hoy View -->
+        <div id="entrada" class="view">
+            <div class="card">
+                <div class="card-title">Registrar Ventas - Hoy</div>
+                <form id="entradaForm">
+                    <div class="form-group">
+                        <label class="form-label">Vendedor</label>
+                        <select id="entradaVendedor" class="form-select" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Monto Vendido ($)</label>
+                        <input type="number" id="entradaMonto" class="form-input" min="0" step="100" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Productos Vendidos (#)</label>
+                        <input type="number" id="entradaProductos" class="form-input" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Clientes Nuevos (#)</label>
+                        <input type="number" id="entradaClientes" class="form-input" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Promociones Logradas (#)</label>
+                        <input type="number" id="entradaPromociones" class="form-input" min="0" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar Datos</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Histórico View -->
+        <div id="historico" class="view">
+            <div class="card">
+                <div class="card-title">Editar Datos Históricos</div>
+                <div id="historicoContent"></div>
+            </div>
+        </div>
+
+        <!-- Configuración View -->
+        <div id="config" class="view">
+            <div class="card">
+                <div class="card-title">Configuración del Sistema</div>
+                <div id="configContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts - Orden IMPORTANTE -->
+    <script src="config.js"></script>
+    <script src="js/state.js"></script>
+    <script src="js/helpers.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/entrada.js"></script>
+    <script src="js/config-view.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

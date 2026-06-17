@@ -3,9 +3,11 @@
 // ============================================
 
 function renderConfig() {
-    let currentStep = 1;
+    let currentStep = window.configStep || 1;
     const maxSteps = 4;
     const configContent = document.getElementById('configContent');
+    
+    console.log('🔧 Configuración abierta - Paso:', currentStep);
 
     // HTML del wizard
     configContent.innerHTML = `
@@ -44,6 +46,9 @@ function renderConfig() {
 
     function showStep(step) {
         const container = document.getElementById('stepsContainer');
+        window.configStep = step;
+        
+        console.log('📍 Moviéndose al paso:', step);
 
         // Actualizar circulitos
         document.querySelectorAll('.stepper-circle').forEach(c => c.classList.remove('active'));
@@ -87,17 +92,20 @@ function renderConfig() {
             e.preventDefault();
             const nombre = document.getElementById('sucursalNombre').value.trim();
             if (!nombre) {
+                console.warn('⚠️ Campo nombre vacío');
                 alert('Ingresa un nombre');
                 return;
             }
 
             if (state.sucursales.some(s => s.Nombre.toLowerCase() === nombre.toLowerCase())) {
+                console.warn('⚠️ Sucursal duplicada:', nombre);
                 alert('Esta sucursal ya existe');
                 return;
             }
 
             const newId = 's' + (state.sucursales.length + 1);
             state.sucursales.push({ ID: newId, Nombre: nombre });
+            console.log('✅ Sucursal agregada:', newId, nombre);
             saveToLocalStorage();
             document.getElementById('sucursalNombre').value = '';
             renderSucursalesList();
@@ -115,7 +123,7 @@ function renderConfig() {
                         <div class="item-name">• ${s.Nombre}</div>
                     </div>
                     <div class="item-actions">
-                        <button type="button" class="btn-delete" onclick="state.sucursales = state.sucursales.filter(x => x.ID !== '${s.ID}'); saveToLocalStorage(); renderConfig(); document.getElementById('btnSiguiente').click(); document.getElementById('btnAnterior').click();">Eliminar</button>
+                        <button type="button" class="btn-delete" onclick="eliminarSucursal('${s.ID}')">Eliminar</button>
                     </div>
                 </div>
             `).join('');
@@ -155,12 +163,14 @@ function renderConfig() {
             const sucursal = document.getElementById('vendedorSucursal').value;
 
             if (!nombre || !sucursal) {
+                console.warn('⚠️ Campos incompletos:', { nombre, sucursal });
                 alert('Completa todos los campos');
                 return;
             }
 
             const newId = 'v' + (state.vendedores.length + 1);
             state.vendedores.push({ ID: newId, Nombre: nombre, Sucursal: sucursal });
+            console.log('✅ Vendedor agregado:', newId, nombre, 'en sucursal:', sucursal);
 
             // Crear metas automáticas
             const month = getCurrentMonth();
@@ -174,6 +184,7 @@ function renderConfig() {
                 Meta_Clientes: 12,
                 Meta_Promociones: 8
             });
+            console.log('✅ Meta automática creada para:', newId);
 
             saveToLocalStorage();
             document.getElementById('vendedorNombre').value = '';
@@ -196,7 +207,7 @@ function renderConfig() {
                             <div class="item-meta">${sucursal?.Nombre || 'Sin sucursal'}</div>
                         </div>
                         <div class="item-actions">
-                            <button type="button" class="btn-delete" onclick="state.vendedores = state.vendedores.filter(x => x.ID !== '${v.ID}'); state.metas = state.metas.filter(m => m.Vendedor !== '${v.ID}'); saveToLocalStorage(); renderConfig(); document.getElementById('btnSiguiente').click(); document.getElementById('btnAnterior').click();">Eliminar</button>
+                            <button type="button" class="btn-delete" onclick="eliminarVendedor('${v.ID}')">Eliminar</button>
                         </div>
                     </div>
                 `;
@@ -266,6 +277,7 @@ function renderConfig() {
             const metaPromociones = parseInt(document.getElementById('metasPromociones').value) || 0;
 
             if (!vendedor) {
+                console.warn('⚠️ Vendedor no seleccionado');
                 alert('Selecciona un vendedor');
                 return;
             }
@@ -276,6 +288,7 @@ function renderConfig() {
                 existing.Meta_Productos = metaProductos;
                 existing.Meta_Clientes = metaClientes;
                 existing.Meta_Promociones = metaPromociones;
+                console.log('✅ Meta actualizada:', vendedor, metaVentas);
             } else {
                 state.metas.push({
                     Vendedor: vendedor,
@@ -286,6 +299,7 @@ function renderConfig() {
                     Meta_Clientes: metaClientes,
                     Meta_Promociones: metaPromociones
                 });
+                console.log('✅ Meta agregada:', vendedor, metaVentas);
             }
 
             saveToLocalStorage();
@@ -315,7 +329,7 @@ function renderConfig() {
                             <div class="item-meta">${formatCurrency(m.Meta_Ventas)} | ${m.Meta_Productos} prod | ${m.Meta_Clientes} clientes | ${m.Meta_Promociones} promos</div>
                         </div>
                         <div class="item-actions">
-                            <button type="button" class="btn-delete" onclick="state.metas = state.metas.filter(x => !(x.Vendedor === '${m.Vendedor}' && x.Mes === ${m.Mes} && x.Año === ${m.Año})); saveToLocalStorage(); renderConfig(); document.getElementById('btnSiguiente').click(); document.getElementById('btnAnterior').click();">Eliminar</button>
+                            <button type="button" class="btn-delete" onclick="eliminarMeta('${m.Vendedor}', ${m.Mes}, ${m.Año})">Eliminar</button>
                         </div>
                     </div>
                 `;

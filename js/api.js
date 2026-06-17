@@ -48,23 +48,19 @@ async function loadFromGoogleSheets() {
 
 async function sendToGoogleSheets(action, data) {
     try {
-        const response = await fetch(APPS_SCRIPT_URL, {
-            method: 'POST',
-            body: new URLSearchParams({
-                action: action,
-                ...data
-            })
+        // Convertir datos a query string
+        const params = new URLSearchParams({ action, ...data });
+        const url = `${APPS_SCRIPT_URL}?${params.toString()}`;
+        
+        console.log('📤 Enviando a Google Sheets:', action);
+        
+        const response = await fetch(url, {
+            method: 'GET',
+            mode: 'no-cors'
         });
         
-        const result = await response.json();
-        
-        if (result.success) {
-            console.log(`✓ ${result.message}`);
-            return true;
-        } else {
-            console.error(`Error: ${result.error}`);
-            return false;
-        }
+        console.log('✅ Enviado:', action);
+        return true;
     } catch (error) {
         console.error(`Error sending to Google Sheets (${action}):`, error);
         return false;

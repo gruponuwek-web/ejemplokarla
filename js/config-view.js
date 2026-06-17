@@ -2,7 +2,7 @@
 // CONFIGURACIÓN - Wizard de 4 Pasos
 // ============================================
 
-function renderConfig() {
+async function renderConfig() {
     let currentStep = window.configStep || 1;
     const maxSteps = 4;
     const configContent = document.getElementById('configContent');
@@ -88,7 +88,7 @@ function renderConfig() {
 
         renderSucursalesList();
 
-        document.getElementById('sucursalForm').addEventListener('submit', (e) => {
+        document.getElementById('sucursalForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const nombre = document.getElementById('sucursalNombre').value.trim();
             if (!nombre) {
@@ -166,7 +166,7 @@ function renderConfig() {
 
         renderVendedoresList();
 
-        document.getElementById('vendedorForm').addEventListener('submit', (e) => {
+        document.getElementById('vendedorForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const nombre = document.getElementById('vendedorNombre').value.trim();
             const sucursal = document.getElementById('vendedorSucursal').value;
@@ -285,7 +285,7 @@ function renderConfig() {
 
         renderMetasLoadedList();
 
-        document.getElementById('metasForm').addEventListener('submit', (e) => {
+        document.getElementById('metasForm').addEventListener('submit', async (e) => {
             e.preventDefault();
             const vendedor = document.getElementById('metasVendedor').value;
             const mes = parseInt(document.getElementById('metasMesAno').value);
@@ -398,11 +398,11 @@ function renderConfig() {
     }
 
     // Handlers de navegación
-    document.getElementById('btnAnterior').addEventListener('click', () => {
+    document.getElementById('btnAnterior').addEventListener('click', async () => {
         if (currentStep > 1) showStep(currentStep - 1);
     });
 
-    document.getElementById('btnSiguiente').addEventListener('click', () => {
+    document.getElementById('btnSiguiente').addEventListener('click', async () => {
         if (currentStep < maxSteps) {
             showStep(currentStep + 1);
         } else {

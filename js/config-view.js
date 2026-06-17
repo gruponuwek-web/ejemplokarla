@@ -107,6 +107,15 @@ function renderConfig() {
             state.sucursales.push({ ID: newId, Nombre: nombre });
             console.log('✅ Sucursal agregada:', newId, nombre);
             saveToLocalStorage();
+            
+            // Guardar en Google Sheets
+            try {
+                await addSucursal(nombre);
+                console.log('☁️ Sincronizado con Google Sheets');
+            } catch(error) {
+                console.warn('⚠️ Error al sincronizar:', error);
+            }
+            
             document.getElementById('sucursalNombre').value = '';
             renderSucursalesList();
         });
@@ -187,6 +196,15 @@ function renderConfig() {
             console.log('✅ Meta automática creada para:', newId);
 
             saveToLocalStorage();
+            
+            // Guardar en Google Sheets
+            try {
+                await addVendedor(nombre, sucursal);
+                console.log('☁️ Vendedor sincronizado con Google Sheets');
+            } catch(error) {
+                console.warn('⚠️ Error al sincronizar vendedor:', error);
+            }
+            
             document.getElementById('vendedorNombre').value = '';
             document.getElementById('vendedorSucursal').value = '';
             renderVendedoresList();
@@ -303,6 +321,15 @@ function renderConfig() {
             }
 
             saveToLocalStorage();
+            
+            // Guardar en Google Sheets
+            try {
+                await addMeta(vendedor, mes, year, metaVentas, metaProductos, metaClientes, metaPromociones);
+                console.log('☁️ Meta sincronizada con Google Sheets');
+            } catch(error) {
+                console.warn('⚠️ Error al sincronizar meta:', error);
+            }
+            
             document.getElementById('metasForm').reset();
             renderMetasLoadedList();
         });
